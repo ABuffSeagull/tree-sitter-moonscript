@@ -1,0 +1,11 @@
+=============
+Simple indent
+=============
+0
+    0
+-------------
+
+(source_file
+    (identifier)
+    (indent)
+    (identifier))
