@@ -49,3 +49,15 @@ b or= false
   (assignment
     destination: (identifier)
 	source: (boolean)))
+
+=================
+Multi assignment
+=================
+a, b = true, false
+-----------------
+(source_file
+  (assignment
+    destination: (identifier)
+	destination: (identifier)
+	source: (boolean)
+	source: (boolean)))

@@ -7,6 +7,8 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+const multi = (inner) => seq(inner, repeat(seq(",", inner)));
+
 module.exports = grammar({
 	name: "moonscript",
 
@@ -24,9 +26,9 @@ module.exports = grammar({
 		assignment: ($) =>
 			seq(
 				optional(choice("export", "local")),
-				field("destination", $.identifier),
+				field("destination", multi($.identifier)),
 				$._assignment_op,
-				field("source", $._expression),
+				field("source", multi($._expression)),
 			),
 
 		_assignment_op: ($) =>
