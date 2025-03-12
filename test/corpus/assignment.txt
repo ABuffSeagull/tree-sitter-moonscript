@@ -1,0 +1,51 @@
+=================
+Simple assignment
+=================
+hello = world
+export hello = "world"
+-----------------
+(source_file
+  (assignment
+    destination: (identifier)
+	source: (identifier))
+  (assignment
+    destination: (identifier)
+	source: (string)))
+
+=================
+Update assignment
+=================
+x += 10
+x -= 10
+x /= 10
+x *= 10
+x %= 10
+s ..= "world"
+b and= true
+b or= false
+-----------------
+(source_file
+  (assignment
+    destination: (identifier)
+	source: (number))
+  (assignment
+    destination: (identifier)
+	source: (number))
+  (assignment
+    destination: (identifier)
+	source: (number))
+  (assignment
+    destination: (identifier)
+	source: (number))
+  (assignment
+    destination: (identifier)
+	source: (number))
+  (assignment
+    destination: (identifier)
+	source: (string))
+  (assignment
+    destination: (identifier)
+	source: (boolean))
+  (assignment
+    destination: (identifier)
+	source: (boolean)))

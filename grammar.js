@@ -11,11 +11,30 @@ module.exports = grammar({
 	name: "moonscript",
 
 	externals: ($) => [$.indent, $.dedent, $.error_sentinel],
-	// extras: ($) => ["\n"],
+
+	reserved: {
+		global: ($) => ["export", "local"],
+	},
 
 	rules: {
-		source_file: ($) => repeat($._line),
-		_line: ($) => choice($.identifier, seq($.indent, $.identifier), $.dedent),
-		identifier: ($) => new RustRegex("\\d+"),
+		source_file: ($) => repeat($.assignment),
+
+		_expression: ($) => choice($.boolean, $.string, $.number, $.identifier),
+
+		assignment: ($) =>
+			seq(
+				optional(choice("export", "local")),
+				field("destination", $.identifier),
+				$._assignment_op,
+				field("source", $._expression),
+			),
+
+		_assignment_op: ($) =>
+			choice("=", "+=", "-=", "/=", "*=", "%=", "..=", "and=", "or="),
+
+		identifier: ($) => new RustRegex("[a-zA-Z]+"),
+		number: ($) => new RustRegex("\\d+"),
+		string: ($) => new RustRegex('".*"'),
+		boolean: ($) => choice("true", "false"),
 	},
 });

@@ -1,5 +1,48 @@
 [
   {
+    "type": "assignment",
+    "named": true,
+    "fields": {
+      "destination": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "source": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "boolean",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "boolean",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "source_file",
     "named": true,
     "root": true,
@@ -9,30 +52,74 @@
       "required": false,
       "types": [
         {
-          "type": "dedent",
-          "named": true
-        },
-        {
-          "type": "identifier",
-          "named": true
-        },
-        {
-          "type": "indent",
+          "type": "assignment",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "dedent",
-    "named": true
+    "type": "%=",
+    "named": false
+  },
+  {
+    "type": "*=",
+    "named": false
+  },
+  {
+    "type": "+=",
+    "named": false
+  },
+  {
+    "type": "-=",
+    "named": false
+  },
+  {
+    "type": "..=",
+    "named": false
+  },
+  {
+    "type": "/=",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
+    "type": "and=",
+    "named": false
+  },
+  {
+    "type": "export",
+    "named": false
+  },
+  {
+    "type": "false",
+    "named": false
   },
   {
     "type": "identifier",
     "named": true
   },
   {
-    "type": "indent",
+    "type": "local",
+    "named": false
+  },
+  {
+    "type": "number",
     "named": true
+  },
+  {
+    "type": "or=",
+    "named": false
+  },
+  {
+    "type": "string",
+    "named": true
+  },
+  {
+    "type": "true",
+    "named": false
   }
 ]
