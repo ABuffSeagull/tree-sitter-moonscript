@@ -1,0 +1,59 @@
+=================
+Literals
+=================
+123
+"hello"
+true
+false
+nil
+-----------------
+(source_file
+	(number)
+	(string)
+	(boolean)
+	(boolean)
+	(nil))
+
+=================
+Operators
+=================
+1 + 2
+4 - 3
+2 * 4
+10 / 5
+"foo" .. "bar"
+true and true
+true or true
+true == true
+true != false
+-4
+-----------------
+(source_file
+  (bin_op
+	left: (number)
+	right: (number))
+  (bin_op
+	left: (number)
+	right: (number))
+  (bin_op
+	left: (number)
+	right: (number))
+  (bin_op
+	left: (number)
+	right: (number))
+  (bin_op
+	left: (string)
+	right: (string))
+  (bin_op
+	left: (boolean)
+	right: (boolean))
+  (bin_op
+	left: (boolean)
+	right: (boolean))
+  (bin_op
+	left: (boolean)
+	right: (boolean))
+  (bin_op
+	left: (boolean)
+	right: (boolean))
+  (unary_op (number)))

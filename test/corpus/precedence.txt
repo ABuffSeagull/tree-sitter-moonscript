@@ -1,0 +1,11 @@
+=============
+Bin op associativity
+=============
+1 + 2 + 3
+-------------
+(source_file
+  (bin_op
+    left: (number)
+    right: (bin_op
+             left: (number)
+             right: (number))))

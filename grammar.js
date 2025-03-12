@@ -20,26 +20,61 @@ module.exports = grammar({
 	},
 
 	rules: {
-		source_file: ($) => repeat($.assignment),
+		source_file: ($) => repeat($._statement),
+
+		_statement: ($) =>
+			seq(choice($.assignment, multi($._expression)), choice("\n", "\0")),
 
 		comment: ($) => new RustRegex("--.*"),
 
-		_expression: ($) => choice($.boolean, $.string, $.number, $.identifier),
+		_expression: ($) =>
+			prec(
+				0,
+				choice(
+					$.bin_op,
+					$.unary_op,
+					$.boolean,
+					$.string,
+					$.number,
+					$.nil,
+					$.identifier,
+					seq("(", $._expression, ")"),
+				),
+			),
 
 		assignment: ($) =>
-			seq(
-				optional(choice("export", "local")),
-				field("destination", multi($.identifier)),
-				$._assignment_op,
-				field("source", multi($._expression)),
+			prec(
+				1,
+				seq(
+					optional(choice("export", "local")),
+					field("destination", multi($.identifier)),
+					$._assignment_op,
+					field("source", multi($._expression)),
+				),
 			),
 
 		_assignment_op: ($) =>
 			choice("=", "+=", "-=", "/=", "*=", "%=", "..=", "and=", "or="),
 
+		bin_op: ($) =>
+			prec.right(
+				0,
+				seq(
+					field("left", $._expression),
+					$._bin_operator,
+					field("right", $._expression),
+				),
+			),
+
+		_bin_operator: ($) =>
+			choice("+", "-", "*", "/", "and", "or", "..", "==", "!="),
+
+		unary_op: ($) => prec(1, seq("-", $._expression)),
+
 		identifier: ($) => new RustRegex("[a-zA-Z]+"),
 		number: ($) => new RustRegex("\\d+"),
-		string: ($) => new RustRegex('".*"'),
+		string: ($) => seq('"', repeat(new RustRegex(".")), '"'),
 		boolean: ($) => choice("true", "false"),
+		nil: ($) => "nil",
 	},
 });
