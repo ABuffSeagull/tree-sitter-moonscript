@@ -8,13 +8,14 @@
 // @ts-check
 
 module.exports = grammar({
-  name: "moonscript",
+	name: "moonscript",
 
-  externals: ($) => [$.indent, $.dedent],
-  extras: ($) => ["\n"],
+	externals: ($) => [$.indent, $.dedent, $.error_sentinel],
+	// extras: ($) => ["\n"],
 
-  rules: {
-    source_file: ($) => repeat(seq(optional($.indent), $.identitier)),
-    identitier: ($) => new RustRegex("\\w+"),
-  },
+	rules: {
+		source_file: ($) => repeat($._line),
+		_line: ($) => choice($.identifier, seq($.indent, $.identifier), $.dedent),
+		identifier: ($) => new RustRegex("\\d+"),
+	},
 });

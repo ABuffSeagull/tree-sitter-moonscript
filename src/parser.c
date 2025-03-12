@@ -9,10 +9,10 @@
 #define LANGUAGE_VERSION 15
 #define STATE_COUNT 7
 #define LARGE_STATE_COUNT 4
-#define SYMBOL_COUNT 6
+#define SYMBOL_COUNT 8
 #define ALIAS_COUNT 0
-#define TOKEN_COUNT 4
-#define EXTERNAL_TOKEN_COUNT 2
+#define TOKEN_COUNT 5
+#define EXTERNAL_TOKEN_COUNT 3
 #define FIELD_COUNT 0
 #define MAX_ALIAS_SEQUENCE_LENGTH 2
 #define MAX_RESERVED_WORD_SET_SIZE 0
@@ -20,28 +20,34 @@
 #define SUPERTYPE_COUNT 0
 
 enum ts_symbol_identifiers {
-  sym_identitier = 1,
+  sym_identifier = 1,
   sym_indent = 2,
   sym_dedent = 3,
-  sym_source_file = 4,
-  aux_sym_source_file_repeat1 = 5,
+  sym_error_sentinel = 4,
+  sym_source_file = 5,
+  sym__line = 6,
+  aux_sym_source_file_repeat1 = 7,
 };
 
 static const char * const ts_symbol_names[] = {
   [ts_builtin_sym_end] = "end",
-  [sym_identitier] = "identitier",
+  [sym_identifier] = "identifier",
   [sym_indent] = "indent",
   [sym_dedent] = "dedent",
+  [sym_error_sentinel] = "error_sentinel",
   [sym_source_file] = "source_file",
+  [sym__line] = "_line",
   [aux_sym_source_file_repeat1] = "source_file_repeat1",
 };
 
 static const TSSymbol ts_symbol_map[] = {
   [ts_builtin_sym_end] = ts_builtin_sym_end,
-  [sym_identitier] = sym_identitier,
+  [sym_identifier] = sym_identifier,
   [sym_indent] = sym_indent,
   [sym_dedent] = sym_dedent,
+  [sym_error_sentinel] = sym_error_sentinel,
   [sym_source_file] = sym_source_file,
+  [sym__line] = sym__line,
   [aux_sym_source_file_repeat1] = aux_sym_source_file_repeat1,
 };
 
@@ -50,7 +56,7 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = false,
     .named = true,
   },
-  [sym_identitier] = {
+  [sym_identifier] = {
     .visible = true,
     .named = true,
   },
@@ -62,8 +68,16 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = true,
     .named = true,
   },
+  [sym_error_sentinel] = {
+    .visible = true,
+    .named = true,
+  },
   [sym_source_file] = {
     .visible = true,
+    .named = true,
+  },
+  [sym__line] = {
+    .visible = false,
     .named = true,
   },
   [aux_sym_source_file_repeat1] = {
@@ -96,21 +110,16 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
   switch (state) {
     case 0:
       if (eof) ADVANCE(1);
-      if (lookahead == '\n') SKIP(0);
-      if (('0' <= lookahead && lookahead <= '9') ||
-          ('A' <= lookahead && lookahead <= 'Z') ||
-          lookahead == '_' ||
-          ('a' <= lookahead && lookahead <= 'z')) ADVANCE(2);
+      if (('\t' <= lookahead && lookahead <= '\r') ||
+          lookahead == ' ') SKIP(0);
+      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(2);
       END_STATE();
     case 1:
       ACCEPT_TOKEN(ts_builtin_sym_end);
       END_STATE();
     case 2:
-      ACCEPT_TOKEN(sym_identitier);
-      if (('0' <= lookahead && lookahead <= '9') ||
-          ('A' <= lookahead && lookahead <= 'Z') ||
-          lookahead == '_' ||
-          ('a' <= lookahead && lookahead <= 'z')) ADVANCE(2);
+      ACCEPT_TOKEN(sym_identifier);
+      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(2);
       END_STATE();
     default:
       return false;
@@ -130,49 +139,57 @@ static const TSLexerMode ts_lex_modes[STATE_COUNT] = {
 static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   [STATE(0)] = {
     [ts_builtin_sym_end] = ACTIONS(1),
-    [sym_identitier] = ACTIONS(1),
+    [sym_identifier] = ACTIONS(1),
     [sym_indent] = ACTIONS(1),
     [sym_dedent] = ACTIONS(1),
+    [sym_error_sentinel] = ACTIONS(1),
   },
   [STATE(1)] = {
     [sym_source_file] = STATE(6),
+    [sym__line] = STATE(2),
     [aux_sym_source_file_repeat1] = STATE(2),
     [ts_builtin_sym_end] = ACTIONS(3),
-    [sym_identitier] = ACTIONS(5),
+    [sym_identifier] = ACTIONS(5),
     [sym_indent] = ACTIONS(7),
+    [sym_dedent] = ACTIONS(5),
   },
   [STATE(2)] = {
+    [sym__line] = STATE(3),
     [aux_sym_source_file_repeat1] = STATE(3),
     [ts_builtin_sym_end] = ACTIONS(9),
-    [sym_identitier] = ACTIONS(11),
+    [sym_identifier] = ACTIONS(11),
     [sym_indent] = ACTIONS(7),
+    [sym_dedent] = ACTIONS(11),
   },
   [STATE(3)] = {
+    [sym__line] = STATE(3),
     [aux_sym_source_file_repeat1] = STATE(3),
     [ts_builtin_sym_end] = ACTIONS(13),
-    [sym_identitier] = ACTIONS(15),
+    [sym_identifier] = ACTIONS(15),
     [sym_indent] = ACTIONS(18),
+    [sym_dedent] = ACTIONS(15),
   },
 };
 
 static const uint16_t ts_small_parse_table[] = {
   [0] = 1,
-    ACTIONS(13), 3,
+    ACTIONS(21), 4,
       sym_indent,
+      sym_dedent,
       ts_builtin_sym_end,
-      sym_identitier,
-  [6] = 1,
-    ACTIONS(21), 1,
-      sym_identitier,
-  [10] = 1,
+      sym_identifier,
+  [7] = 1,
     ACTIONS(23), 1,
+      sym_identifier,
+  [11] = 1,
+    ACTIONS(25), 1,
       ts_builtin_sym_end,
 };
 
 static const uint32_t ts_small_parse_table_map[] = {
   [SMALL_STATE(4)] = 0,
-  [SMALL_STATE(5)] = 6,
-  [SMALL_STATE(6)] = 10,
+  [SMALL_STATE(5)] = 7,
+  [SMALL_STATE(6)] = 11,
 };
 
 static const TSParseActionEntry ts_parse_actions[] = {
@@ -186,27 +203,32 @@ static const TSParseActionEntry ts_parse_actions[] = {
   [13] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0),
   [15] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(3),
   [18] = {.entry = {.count = 2, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0), SHIFT_REPEAT(5),
-  [21] = {.entry = {.count = 1, .reusable = true}}, SHIFT(4),
-  [23] = {.entry = {.count = 1, .reusable = true}},  ACCEPT_INPUT(),
+  [21] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym__line, 2, 0, 0),
+  [23] = {.entry = {.count = 1, .reusable = true}}, SHIFT(4),
+  [25] = {.entry = {.count = 1, .reusable = true}},  ACCEPT_INPUT(),
 };
 
 enum ts_external_scanner_symbol_identifiers {
   ts_external_token_indent = 0,
   ts_external_token_dedent = 1,
+  ts_external_token_error_sentinel = 2,
 };
 
 static const TSSymbol ts_external_scanner_symbol_map[EXTERNAL_TOKEN_COUNT] = {
   [ts_external_token_indent] = sym_indent,
   [ts_external_token_dedent] = sym_dedent,
+  [ts_external_token_error_sentinel] = sym_error_sentinel,
 };
 
 static const bool ts_external_scanner_states[3][EXTERNAL_TOKEN_COUNT] = {
   [1] = {
     [ts_external_token_indent] = true,
     [ts_external_token_dedent] = true,
+    [ts_external_token_error_sentinel] = true,
   },
   [2] = {
     [ts_external_token_indent] = true,
+    [ts_external_token_dedent] = true,
   },
 };
 

@@ -9,7 +9,11 @@
       "required": false,
       "types": [
         {
-          "type": "identitier",
+          "type": "dedent",
+          "named": true
+        },
+        {
+          "type": "identifier",
           "named": true
         },
         {
@@ -20,7 +24,11 @@
     }
   },
   {
-    "type": "identitier",
+    "type": "dedent",
+    "named": true
+  },
+  {
+    "type": "identifier",
     "named": true
   },
   {

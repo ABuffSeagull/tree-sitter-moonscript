@@ -2,10 +2,39 @@
 Simple indent
 =============
 0
-    0
+ 0
 -------------
 
 (source_file
     (identifier)
     (indent)
-    (identifier))
+	(identifier))
+
+=============
+Same indent has no token
+=============
+0
+ 0
+ 0
+-------------
+
+(source_file
+    (identifier)
+    (indent)
+	(identifier)
+	(identifier))
+
+=============
+With dedent
+=============
+0
+ 0
+0
+-------------
+
+(source_file
+    (identifier)
+    (indent)
+	(identifier)
+	(dedent)
+	(identifier))
