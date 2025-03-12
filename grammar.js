@@ -13,6 +13,7 @@ module.exports = grammar({
 	name: "moonscript",
 
 	externals: ($) => [$.indent, $.dedent, $.error_sentinel],
+	extras: ($) => [$.comment, new RustRegex("\\s")],
 
 	reserved: {
 		global: ($) => ["export", "local"],
@@ -20,6 +21,8 @@ module.exports = grammar({
 
 	rules: {
 		source_file: ($) => repeat($.assignment),
+
+		comment: ($) => new RustRegex("--.*"),
 
 		_expression: ($) => choice($.boolean, $.string, $.number, $.identifier),
 

@@ -9,6 +9,10 @@
         "name": "assignment"
       }
     },
+    "comment": {
+      "type": "PATTERN",
+      "value": "--.*"
+    },
     "_expression": {
       "type": "CHOICE",
       "members": [
@@ -186,6 +190,10 @@
     }
   },
   "extras": [
+    {
+      "type": "SYMBOL",
+      "name": "comment"
+    },
     {
       "type": "PATTERN",
       "value": "\\s"

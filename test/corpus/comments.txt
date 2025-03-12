@@ -1,0 +1,15 @@
+=================
+Ending comment
+=================
+hello = 123 -- uses the existing variable
+foobar = "neat"
+----------------
+(source_file
+  (assignment
+    destination: (identifier)
+	source: (number))
+  (comment)
+  (assignment
+    destination: (identifier)
+	source: (string)))
+
